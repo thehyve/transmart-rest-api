@@ -8,10 +8,10 @@ import static org.hamcrest.Matchers.*
 
 class HighDimResourceTests extends ResourceTestCase {
 
-    def expectedMrnaAssays = [-402, -401]*.toLong() //groovy autoconverts to BigInteger, and we have to force Long here
+    def expectedMrnaAssays = [-402, -401]*.toString()
     def expectedMrnaRowLabels = ["1553513_at", "1553510_s_at","1553506_at"]
 
-    def expectedAcghAssays = [-3001, -3002]*.toLong()
+    def expectedAcghAssays = [-3001, -3002]*.toString()
     def expectedAcghRowLabels = ["cytoband1", "cytoband2"]
 
     Map<String,String> indexUrlMap = [

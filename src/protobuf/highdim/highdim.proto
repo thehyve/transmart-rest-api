@@ -14,7 +14,7 @@ message HighDimHeader {
 }
 
 message Assay {
-    required int64 assayId = 1;
+    required string assayId = 1;
     required string patientId = 2;
     optional string sampleTypeName = 3;
     optional string timepointName = 4;

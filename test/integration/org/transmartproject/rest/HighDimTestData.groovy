@@ -75,12 +75,14 @@ class HighDimTestData {
                 projectionPropertiesMap.get([dataType, projection])
     }
 
-    private DeSubjectMicroarrayDataCoreDb getMrnaCell(DeMrnaAnnotationCoreDb probe, long assayId) {
-        mrnaData.microarrayData.find { probe == it.probe && assayId == it.assayId}
+    private DeSubjectMicroarrayDataCoreDb getMrnaCell(DeMrnaAnnotationCoreDb probe, String assayId) {
+        long value = assayId.toLong()
+        mrnaData.microarrayData.find { probe == it.probe && value == it.assayId}
     }
 
-    private DeSubjectAcghData getAcghCell(DeChromosomalRegion region, long assayId) {
-        acghData.acghData.find { region == it.region && assayId == it.assayId}
+    private DeSubjectAcghData getAcghCell(DeChromosomalRegion region, String assayId) {
+        long value = assayId.toLong()
+        acghData.acghData.find { region == it.region && value == it.assayId}
     }
 
     private Matcher createMrnaRowMatcher(DeMrnaAnnotationCoreDb probe) {

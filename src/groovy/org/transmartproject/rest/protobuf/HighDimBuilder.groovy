@@ -138,7 +138,7 @@ class HighDimBuilder {
 
     private Assay createAssay(Assay.Builder builder, AssayColumn col) {
         builder.clear()
-        builder.assayId = col.id
+        builder.assayId = col.id.toString()
         builder.patientId = col.patientInTrialId
         builder.platform = col.platform.id
         builder.sampleCode = col.sampleCode

@@ -1075,15 +1075,20 @@ public final class HighDimProtos {
   public interface AssayOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // required int64 assayId = 1;
+    // required string assayId = 1;
     /**
-     * <code>required int64 assayId = 1;</code>
+     * <code>required string assayId = 1;</code>
      */
     boolean hasAssayId();
     /**
-     * <code>required int64 assayId = 1;</code>
+     * <code>required string assayId = 1;</code>
      */
-    long getAssayId();
+    java.lang.String getAssayId();
+    /**
+     * <code>required string assayId = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getAssayIdBytes();
 
     // required string patientId = 2;
     /**
@@ -1226,9 +1231,9 @@ public final class HighDimProtos {
               }
               break;
             }
-            case 8: {
+            case 10: {
               bitField0_ |= 0x00000001;
-              assayId_ = input.readInt64();
+              assayId_ = input.readBytes();
               break;
             }
             case 18: {
@@ -1301,20 +1306,47 @@ public final class HighDimProtos {
     }
 
     private int bitField0_;
-    // required int64 assayId = 1;
+    // required string assayId = 1;
     public static final int ASSAYID_FIELD_NUMBER = 1;
-    private long assayId_;
+    private java.lang.Object assayId_;
     /**
-     * <code>required int64 assayId = 1;</code>
+     * <code>required string assayId = 1;</code>
      */
     public boolean hasAssayId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required int64 assayId = 1;</code>
+     * <code>required string assayId = 1;</code>
      */
-    public long getAssayId() {
-      return assayId_;
+    public java.lang.String getAssayId() {
+      java.lang.Object ref = assayId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          assayId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string assayId = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getAssayIdBytes() {
+      java.lang.Object ref = assayId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        assayId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     // required string patientId = 2;
@@ -1576,7 +1608,7 @@ public final class HighDimProtos {
     }
 
     private void initFields() {
-      assayId_ = 0L;
+      assayId_ = "";
       patientId_ = "";
       sampleTypeName_ = "";
       timepointName_ = "";
@@ -1605,7 +1637,7 @@ public final class HighDimProtos {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeInt64(1, assayId_);
+        output.writeBytes(1, getAssayIdBytes());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeBytes(2, getPatientIdBytes());
@@ -1636,7 +1668,7 @@ public final class HighDimProtos {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(1, assayId_);
+          .computeBytesSize(1, getAssayIdBytes());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
@@ -1778,7 +1810,7 @@ public final class HighDimProtos {
 
       public Builder clear() {
         super.clear();
-        assayId_ = 0L;
+        assayId_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
         patientId_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -1865,7 +1897,9 @@ public final class HighDimProtos {
       public Builder mergeFrom(org.transmartproject.rest.protobuf.HighDimProtos.Assay other) {
         if (other == org.transmartproject.rest.protobuf.HighDimProtos.Assay.getDefaultInstance()) return this;
         if (other.hasAssayId()) {
-          setAssayId(other.getAssayId());
+          bitField0_ |= 0x00000001;
+          assayId_ = other.assayId_;
+          onChanged();
         }
         if (other.hasPatientId()) {
           bitField0_ |= 0x00000002;
@@ -1932,35 +1966,76 @@ public final class HighDimProtos {
       }
       private int bitField0_;
 
-      // required int64 assayId = 1;
-      private long assayId_ ;
+      // required string assayId = 1;
+      private java.lang.Object assayId_ = "";
       /**
-       * <code>required int64 assayId = 1;</code>
+       * <code>required string assayId = 1;</code>
        */
       public boolean hasAssayId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required int64 assayId = 1;</code>
+       * <code>required string assayId = 1;</code>
        */
-      public long getAssayId() {
-        return assayId_;
+      public java.lang.String getAssayId() {
+        java.lang.Object ref = assayId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          assayId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>required int64 assayId = 1;</code>
+       * <code>required string assayId = 1;</code>
        */
-      public Builder setAssayId(long value) {
-        bitField0_ |= 0x00000001;
+      public com.google.protobuf.ByteString
+          getAssayIdBytes() {
+        java.lang.Object ref = assayId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          assayId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string assayId = 1;</code>
+       */
+      public Builder setAssayId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         assayId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>required int64 assayId = 1;</code>
+       * <code>required string assayId = 1;</code>
        */
       public Builder clearAssayId() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        assayId_ = 0L;
+        assayId_ = getDefaultInstance().getAssayId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string assayId = 1;</code>
+       */
+      public Builder setAssayIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        assayId_ = value;
         onChanged();
         return this;
       }
@@ -4164,7 +4239,7 @@ public final class HighDimProtos {
       "\0162\036.highdim.HighDimHeader.RowType\022\035\n\005ass" +
       "ay\030\002 \003(\0132\016.highdim.Assay\022\021\n\tmapColumn\030\003 " +
       "\003(\t\"\"\n\007RowType\022\n\n\006DOUBLE\020\001\022\013\n\007GENERAL\020\002\"" +
-      "\230\001\n\005Assay\022\017\n\007assayId\030\001 \002(\003\022\021\n\tpatientId\030" +
+      "\230\001\n\005Assay\022\017\n\007assayId\030\001 \002(\t\022\021\n\tpatientId\030" +
       "\002 \002(\t\022\026\n\016sampleTypeName\030\003 \001(\t\022\025\n\rtimepoi" +
       "ntName\030\004 \001(\t\022\026\n\016tissueTypeName\030\005 \001(\t\022\020\n\010" +
       "platform\030\006 \001(\t\022\022\n\nsampleCode\030\007 \001(\t\"e\n\003Ro" +
