@@ -44,7 +44,6 @@ class AuditLogFilters {
         resources(controller: 'study|concept|subject|patientSet', action: '*') {
             before = { model ->
                 def fullUrl = "${request.forwardURI}${request.queryString ? '?' + request.queryString : ''}"
-                def ip = request.getHeader('X-FORWARDED-FOR') ?: request.remoteAddr
                 auditLogService.report("REST API access (${controllerName}.${actionName})", request,
                         user: currentUserBean,
                         action: fullUrl as String
