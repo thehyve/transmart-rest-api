@@ -30,13 +30,12 @@ class PatientSetController {
     CurrentUser currentUser
 
     /**
-     * Not yet supported in core-api.
+     * Get all patient sets saved by the current user.
      *
      * GET /patient_sets
      */
     def index() {
-        throw new NoSuchResourceException('Listing previously created ' +
-                'patient resources is not yet possible')
+        respond queriesResource.getQueryResultsByUsername(currentUser.getUsername() )
     }
 
     /**
