@@ -66,5 +66,4 @@ class PatientSetResourceTests extends ResourceTestCase {
                 id: id,
                 setSize: 1)
     }
-
 }

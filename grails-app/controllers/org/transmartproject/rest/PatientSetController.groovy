@@ -45,7 +45,7 @@ class PatientSetController {
      * GET /patient_sets/<result_instance_id>
      */
     def show(Long id) {
-        QueryResult queryResult = queriesResource.getEnabledQueryResultFromId(id)
+        QueryResult queryResult = queriesResource.getQueryResultFromId(id)
 
         currentUser.checkAccess(READ, queryResult)
 
