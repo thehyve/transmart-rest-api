@@ -45,7 +45,7 @@ class PatientSetController {
      * GET /patient_sets/<result_instance_id>
      */
     def show(Long id) {
-        QueryResult queryResult = queriesResource.getQueryResultFromId(id)
+        QueryResult queryResult = queriesResource.getEnabledQueryResultFromId(id)
 
         currentUser.checkAccess(READ, queryResult)
 
@@ -74,6 +74,16 @@ class PatientSetController {
         currentUser.checkAccess(BUILD_COHORT, queryDefinition)
 
         respond queriesResource.runQuery(queryDefinition, currentUser.username),
+                [status: 201]
+    }
+
+    /**
+     * Disable created patient set.
+     *
+     * POST /patient_sets/<result_instance_id>
+     */
+    def disable(Long id) {
+        respond queriesResource.runDisablingQuery(id, currentUser.username),
                 [status: 201]
     }
 }
