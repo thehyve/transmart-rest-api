@@ -34,7 +34,8 @@ class PatientSetResourceTests extends ResourceTestCase {
                 setSize: 1,
                 status: 'FINISHED',
                 id: isA(Number),
-                username: 'admin',)
+                username: 'admin',
+                queryXML: QUERY_DEFINITION)
 
         assertThat resp, hasSelfLink('/patient_sets/' + resp['id'])
 
