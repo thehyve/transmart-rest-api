@@ -22,7 +22,7 @@ class QueryResultSerializationHelper extends AbstractHalOrJsonSerializationHelpe
     Map<String, Object> convertToMap(QueryResult queryResult) {
         def map = getPropertySubsetForSuperType(queryResult, QueryResult)
         map.status = map.status.name()
-
+        map.put('queryXML', queryResult.queryInstance.queryMaster.requestXml)
         map
     }
 
