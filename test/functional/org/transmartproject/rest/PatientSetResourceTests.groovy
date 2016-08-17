@@ -31,6 +31,7 @@ class PatientSetResourceTests extends ResourceTestCase {
         assertStatus 201
 
         assertThat resp, mapWith(
+                name: 'My query',
                 setSize: 1,
                 status: 'FINISHED',
                 id: isA(Number),

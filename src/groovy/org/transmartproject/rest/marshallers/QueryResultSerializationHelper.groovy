@@ -20,7 +20,9 @@ class QueryResultSerializationHelper extends AbstractHalOrJsonSerializationHelpe
 
     @Override
     Map<String, Object> convertToMap(QueryResult queryResult) {
-        def map = getPropertySubsetForSuperType(queryResult, QueryResult)
+        Map<String, Object> map = new HashMap<String, Object>();
+        map = [name: queryResult.queryInstance.queryMaster.name]
+        map<<getPropertySubsetForSuperType(queryResult, QueryResult)
         map.status = map.status.name()
         map.put('queryXML', queryResult.queryInstance.queryMaster.requestXml)
         map
