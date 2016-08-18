@@ -171,4 +171,3 @@ dm?.with {
 }
 
 dm?.inlineInternalDependencies grails, grailsSettings
-Z
