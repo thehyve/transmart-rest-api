@@ -36,7 +36,23 @@ class PatientSetResourceTests extends ResourceTestCase {
                 status: 'FINISHED',
                 id: isA(Number),
                 username: 'admin',
-                queryXML: '\\n<ns3:query_definition xmlns:ns3=\\"http://www.i2b2.org/xsd/cell/crc/psm/querydefinition/1.1/\\">\\n  <query_name>My query</query_name>\\n  <panel>\\n    <item>\\n      <item_key>\\\\i2b2 main\\foo\\study1\\bar\\</item_key>\\n    </item>\\n  </panel>\\n</ns3:query_definition>\\n')
+                queryXML: '<qd:query_definition xmlns:qd=\'http://www.i2b2.org/xsd/cell/crc/psm/querydefinition/1.1/\'>\n' +
+                        '\n' +
+                        '  <query_name>My query</query_name>\n' +
+                        '\n' +
+                        '  <panel>\n' +
+                        '\n' +
+                        '    <invert>0</invert>\n' +
+                        '\n' +
+                        '    <item>\n' +
+                        '\n' +
+                        '      <item_key>\\\\i2b2 main\\foo\\study1\\bar\\</item_key>\n' +
+                        '\n' +
+                        '    </item>\n' +
+                        '\n' +
+                        '  </panel>\n' +
+                        '\n' +
+                        '</qd:query_definition>')
 
         assertThat resp, hasSelfLink('/patient_sets/' + resp['id'])
 
