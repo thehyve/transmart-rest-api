@@ -74,7 +74,7 @@ class RestApiUrlMappings {
             }
         }
 
-        '/patient_sets'(resources: 'patientSet',  include:['index', 'show', 'save', 'disable'])
+        '/patient_sets'(resources: 'patientSet',  include:['index', 'show', 'save', 'delete'])
 
         '/observations'(method: 'GET', controller: 'observation', action: 'indexStandalone')
 

@@ -80,10 +80,10 @@ class PatientSetController {
     /**
      * Disable created patient set.
      *
-     * POST /patient_sets/<result_instance_id>
+     * DELETE /patient_sets/<result_instance_id>
      */
-    def disable(Long id) {
+    def delete(Long id) {
         respond queriesResource.runDisablingQuery(id, currentUser.username),
-                [status: 201]
+                [status: 204]
     }
 }
