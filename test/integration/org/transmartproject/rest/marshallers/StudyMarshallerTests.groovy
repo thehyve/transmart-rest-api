@@ -46,6 +46,7 @@ class StudyMarshallerTests {
     private static final String ONTOLOGY_TERM_NAME = 'test_study'
     private static final String ONTOLOGY_KEY = '\\\\foo bar\\foo\\test_study\\'
     private static final String ONTOLOGY_FULL_NAME = '\\foo\\test_study\\'
+    private static final String version = 'v1'
 
     Study getMockStudy() {
         createStudy(STUDY_ID, ONTOLOGY_KEY)
@@ -79,12 +80,12 @@ class StudyMarshallerTests {
                 hasEntry('id', STUDY_ID),
                 hasEntry(is('_links'),
                         hasEntry(is('self'),
-                                hasEntry('href', "/studies/${STUDY_ID.toLowerCase()}".toString()))),
+                                hasEntry('href', "/$version/studies/${STUDY_ID.toLowerCase()}".toString()))),
                 hasEntry(is('_embedded'),
                     hasEntry(is('ontologyTerm'), allOf(
                             hasEntry(is('_links'),
                                     hasEntry(is('self'),
-                                            hasEntry('href', "/studies/${STUDY_ID.toLowerCase()}/concepts/ROOT".toString()))),
+                                            hasEntry('href', "/$version/studies/${STUDY_ID.toLowerCase()}/concepts/ROOT".toString()))),
                             hasEntry('name', ONTOLOGY_TERM_NAME),
                             hasEntry('fullName', ONTOLOGY_FULL_NAME),
                             hasEntry('key', ONTOLOGY_KEY),

@@ -36,6 +36,8 @@ import static org.hamcrest.Matchers.*
 
 class ConceptsResourceTests extends ResourceTestCase {
 
+    def version = 'v1'
+
     def studyId = 'study_id_1'
     def studyFolderName = 'study1'
     def partialConceptName = 'bar'
@@ -48,19 +50,18 @@ class ConceptsResourceTests extends ResourceTestCase {
     //The full concept path, starting after the studyId
     def conceptId = partialConceptName
 
-    def conceptListUrl = "/studies/${studyId}/concepts"
-    def conceptUrl = "/studies/${studyId}/concepts/${conceptId}"
-    def rootConceptUrl = "/studies/${studyId}/concepts/ROOT"
-
+    def conceptListUrl = "/$version/studies/${studyId}/concepts"
+    def conceptUrl = "/$version/studies/${studyId}/concepts/${conceptId}"
+    def rootConceptUrl = "/$version/studies/${studyId}/concepts/ROOT"
     def longConceptName = 'with%some$characters_'
     def longConceptPath = "\\foo\\study2\\long path\\$longConceptName\\"
     def longConceptKey = "\\\\i2b2 main$longConceptPath"
-    def longConceptUrl = '/studies/study_id_2/concepts/long%20path/with%25some%24characters_'
+    def longConceptUrl = "/$version/studies/study_id_2/concepts/long%20path/with%25some%24characters_"
 
-    def sexConceptUrl = '/studies/study_id_2/concepts/sex'
-    def femaleConceptUrl = '/studies/study_id_2/concepts/sex/female'
+    def sexConceptUrl = "/$version/studies/study_id_2/concepts/sex"
+    def femaleConceptUrl = "/$version/studies/study_id_2/concepts/sex/female"
 
-    def study2ConceptListUrl = '/studies/study_id_2/concepts'
+    def study2ConceptListUrl = "/$version/studies/study_id_2/concepts"
 
     def study1RootConceptTags = [
             "1 name 1": "1 description 1",
@@ -82,7 +83,7 @@ class ConceptsResourceTests extends ResourceTestCase {
 
         assertThat result,
                 halIndexResponse(
-                        conceptListUrl,
+                        this.conceptListUrl,
                         ['ontology_terms': contains(
                                 halConceptResponse()
                         )]
@@ -113,7 +114,7 @@ class ConceptsResourceTests extends ResourceTestCase {
         def result = getAsHal rootConceptUrl
         assertStatus 200
 
-        assertThat result, halConceptResponse(rootConceptKey, studyFolderName, rootConceptPath, rootConceptUrl, false)
+        assertThat result, halConceptResponse(rootConceptKey, studyFolderName, rootConceptPath, this.rootConceptUrl, false)
     }
 
     void testPathOfLongConcept() {
@@ -121,9 +122,9 @@ class ConceptsResourceTests extends ResourceTestCase {
 
         assertStatus 200
         assertThat result, is(halIndexResponse(
-                study2ConceptListUrl,
+                this.study2ConceptListUrl,
                 ['ontology_terms': hasItem(
-                        hasSelfLink(longConceptUrl))]))
+                        hasSelfLink(this.longConceptUrl))]))
     }
 
     void testCanHitLongConcept() {
@@ -141,13 +142,13 @@ class ConceptsResourceTests extends ResourceTestCase {
     void testNavigableConceptRoot() {
         def result = getAsHal rootConceptUrl
         assertStatus 200
-        assertThat result, NavigationLinksMatcher.hasNavigationLinks(rootConceptUrl, null, 'bar')
+        assertThat result, NavigationLinksMatcher.hasNavigationLinks(this.rootConceptUrl, null, 'bar')
     }
 
     void testNavigableConceptLeaf() {
         def result = getAsHal conceptUrl
         assertStatus 200
-        assertThat result, NavigationLinksMatcher.hasNavigationLinks(conceptUrl, rootConceptUrl, null)
+        assertThat result, NavigationLinksMatcher.hasNavigationLinks(this.conceptUrl, this.rootConceptUrl, null)
     }
 
     void testMetadataTagsAsJson() {
@@ -209,7 +210,7 @@ class ConceptsResourceTests extends ResourceTestCase {
     private Matcher halConceptResponse(String key = conceptKey,
                                        String name = partialConceptName,
                                        String fullName = conceptPath,
-                                       String selfLink = conceptUrl,
+                                       String selfLink = this.conceptUrl,
                                        boolean highDimLink = true) {
 
         Map links = [self: selfLink]

@@ -37,6 +37,8 @@ import static org.thehyve.commons.test.FastMatchers.*
 
 class HighDimResourceTests extends ResourceTestCase {
 
+    def version = 'v1'
+
     def expectedMrnaAssays = [-402, -401]*.toLong() //groovy autoconverts to BigInteger, and we have to force Long here
     def expectedMrnaRowLabels = ["1553513_at", "1553510_s_at","1553506_at"]
 
@@ -52,8 +54,8 @@ class HighDimResourceTests extends ResourceTestCase {
                                         'disjunction', 'pathways', 'proteins',]
 
     Map<String,String> indexUrlMap = [
-            mrna: "/studies/study_id_1/concepts/bar/highdim",
-            acgh: "/studies/study_id_2/concepts/study1/highdim",
+            mrna: "/$version/studies/study_id_1/concepts/bar/highdim",
+            acgh: "/$version/studies/study_id_2/concepts/study1/highdim",
     ]
 
     void testSummaryAsJson() {
@@ -140,7 +142,7 @@ class HighDimResourceTests extends ResourceTestCase {
         def dataConstraints = '{ genes: [ { names: ["ADIRF"] } ] }'
 
         HighDimResult result = getAsHighDim(
-                getHighDimUrl('acgh', null, null, dataConstraints))
+               getHighDimUrl('acgh', null, null, dataConstraints))
 
         assertThat result.rows, contains(
                 hasProperty('bioMarker', equalTo('ADIRF'))

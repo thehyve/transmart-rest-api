@@ -58,6 +58,7 @@ class PatientMarshallerTests {
     private static final String RACE           = 'Caucasian'
     private static final String MARITAL_STATUS = 'Married'
     private static final String RELIGION       = 'Judaism'
+    private static final String version       = 'v1'
 
     Patient getMockPatient() {
         [
@@ -129,7 +130,7 @@ class PatientMarshallerTests {
                 // do not test the rest
                 hasEntry(is('_links'),
                         hasEntry(is('self'),
-                                hasEntry('href', "/studies/$TRIAL_LC/subjects/$ID".toString()))))
+                                hasEntry('href', "/$version/studies/$TRIAL_LC/subjects/$ID".toString()))))
     }
 
 }

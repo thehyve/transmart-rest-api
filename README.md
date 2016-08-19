@@ -26,7 +26,7 @@ The return message's body will contain JSON with additional HAL format, with the
 | delete patient set | DELETE `/patient_sets/{resultInstanceId}` | deletes a previously created patient set, the patient set is still stored in a database |
 | get index of highdim data for single concept| GET `/studies/{studyId}/concepts/{conceptPath}/highdim` | returns index with the available datatype and projections, assay constraints and data constraints for this highdim concept for a study |
 | get highdim data for single concept| GET `/studies/{studyId}/concepts/{conceptPath}/highdim?dataType={dataType}&projection={projectionType}&assayConstraints={assayConstraints}&dataConstraints={dataConstraints}` | returns highdim data of a specific dataType and projection for one concept of a study |
-| get api-version | GET `/api-version` | returns version of rest-api |
+| get api-version | GET `/api-version` | returns version of the REST API |
 
 #### Explanation of URI variables
 | variable  | explanation |
