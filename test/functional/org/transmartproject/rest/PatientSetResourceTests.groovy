@@ -8,6 +8,7 @@ import static org.thehyve.commons.test.FastMatchers.mapWith
 
 class PatientSetResourceTests extends ResourceTestCase {
 
+    def version ='v1'
 
     public static final String QUERY_DEFINITION = '''
 <ns3:query_definition xmlns:ns3="http://www.i2b2.org/xsd/cell/crc/psm/querydefinition/1.1/">
@@ -21,7 +22,7 @@ class PatientSetResourceTests extends ResourceTestCase {
 '''
 
     void testSave() {
-        def resp = postAsHal('/patient_sets') {
+        def resp = postAsHal("/$version/patient_sets") {
             contentType MimeType.XML.name
             body {
                 QUERY_DEFINITION
@@ -37,7 +38,7 @@ class PatientSetResourceTests extends ResourceTestCase {
                 id: isA(Number),
                 username: 'admin')
 
-        assertThat resp, hasSelfLink('/patient_sets/' + resp['id'])
+        assertThat resp, hasSelfLink("/$version/patient_sets/" + resp['id'])
 
         assertThat resp, hasEntry(is('_embedded'),
                 hasEntry(is('patients'),
@@ -46,11 +47,11 @@ class PatientSetResourceTests extends ResourceTestCase {
                                         id: -101,
                                         trial: 'STUDY_ID_1',
                                         inTrialId: 'SUBJ_ID_1',),
-                                hasSelfLink('/studies/study_id_1/subjects/-101')))))
+                                hasSelfLink("/$version/studies/study_id_1/subjects/-101")))))
     }
 
     void testSaveAndLoad() {
-        def resp = postAsHal('/patient_sets') {
+        def resp = postAsHal("/$version/patient_sets") {
             contentType MimeType.XML.name
             body {
                 QUERY_DEFINITION
@@ -59,7 +60,7 @@ class PatientSetResourceTests extends ResourceTestCase {
 
         assertStatus 201
         def id = resp['id']
-        resp = getAsHal('/patient_sets/' + id)
+        resp = getAsHal("/$version/patient_sets/" + id)
 
         assertStatus 200
 

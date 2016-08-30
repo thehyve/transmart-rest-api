@@ -30,11 +30,12 @@ import static org.hamcrest.Matchers.*
 
 class StudiesResourceTests extends ResourceTestCase {
 
+    def version = 'v1'
     def childLinkHrefPath = '_embedded.ontologyTerm._links.children[0].href'
-    def expectedChildLinkHrefValue = '/studies/study_id_1/concepts/bar'
+    def expectedChildLinkHrefValue = '/' + version + '/studies/study_id_1/concepts/bar'
 
     void testListAllStudies() {
-        get("${baseURL}studies")
+        get("${baseURL}$version/studies")
         assertStatus 200
 
         assertThat JSON, hasEntry(is('studies'), contains(
@@ -66,17 +67,17 @@ class StudiesResourceTests extends ResourceTestCase {
     }
 
     void testListAllStudiesAsHal() {
-        def result = getAsHal("${baseURL}studies")
+        def result = getAsHal("${baseURL}$version/studies")
         
         //log.info "testListAllStudiesAsHal:\n" + result.toString(2) 
         
         assertStatus 200
 
-        assertThat result, halIndexResponse('/studies', ['studies': 
+        assertThat result, halIndexResponse("/$version/studies", ['studies':
             contains(
                 allOf(
                         hasEntry('id', 'STUDY_ID_1'),
-                        halIndexResponse('/studies/study_id_1', ['ontologyTerm':
+                        halIndexResponse("/$version/studies/study_id_1", ['ontologyTerm':
                             allOf(
                                 hasEntry('name', 'study1'),
                                 hasEntry('fullName', '\\foo\\study1\\'),
@@ -86,7 +87,7 @@ class StudiesResourceTests extends ResourceTestCase {
                 ),
                 allOf(
                         hasEntry('id', 'STUDY_ID_2'),
-                        halIndexResponse('/studies/study_id_2', ['ontologyTerm':
+                        halIndexResponse("/$version/studies/study_id_2", ['ontologyTerm':
                             allOf(
                                 hasEntry('name', 'study2'),
                                 hasEntry('fullName', '\\foo\\study2\\'),
@@ -96,7 +97,7 @@ class StudiesResourceTests extends ResourceTestCase {
                 ),
                 allOf(
                         hasEntry('id', 'STUDY_ID_3'),
-                        halIndexResponse('/studies/study_id_3', ['ontologyTerm':
+                        halIndexResponse("/$version/studies/study_id_3", ['ontologyTerm':
                             allOf(
                                 hasEntry('name', 'study3'),
                                 hasEntry('fullName', '\\foo\\study3\\'),
@@ -110,7 +111,7 @@ class StudiesResourceTests extends ResourceTestCase {
 
     void testGetStudy() {
         def studyId = 'STUDY_ID_1'
-        get("${baseURL}studies/${studyId}")
+        get("${baseURL}$version/studies/${studyId}")
         assertStatus 200
 
         assertThat JSON, allOf(
@@ -125,14 +126,14 @@ class StudiesResourceTests extends ResourceTestCase {
 
     void testGetStudyAsHal() {
         def studyId = 'STUDY_ID_1'
-        def result = getAsHal("${baseURL}studies/${studyId}")
+        def result = getAsHal("${baseURL}$version/studies/${studyId}")
         assertStatus 200
 
         //log.info "testGetStudyAsHal:\n" + result.toString(2)
         
         assertThat result, allOf(
             hasEntry('id', 'STUDY_ID_1'),
-            halIndexResponse("/studies/${studyId}".toLowerCase(), [
+            halIndexResponse("/$version/studies/${studyId}".toLowerCase(), [
                 'ontologyTerm': allOf(
                     hasEntry('name', 'study1'),
                     hasEntry('fullName', '\\foo\\study1\\'),
@@ -144,13 +145,13 @@ class StudiesResourceTests extends ResourceTestCase {
     
     void testListStudiesChildLink() {
         def path = "_embedded.studies[0].$childLinkHrefPath"
-        def result = getAsHal '/studies'
+        def result = getAsHal("/$version/studies")
         assertStatus 200
         assertThat result, JsonMatcher.matching(path, is(expectedChildLinkHrefValue))
     }
 
     void testGetStudyChildLink() {
-        def result = getAsHal '/studies/study_id_1'
+        def result = getAsHal "/$version/studies/study_id_1"
         assertStatus 200
         assertThat result, JsonMatcher.matching(childLinkHrefPath, is(expectedChildLinkHrefValue))
     }

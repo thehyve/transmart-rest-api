@@ -36,7 +36,6 @@ import static grails.rest.render.util.AbstractLinkingRenderer.RELATIONSHIP_SELF
 class StudySerializationHelper extends AbstractHalOrJsonSerializationHelper<Study> {
 
     final Class targetType = Study
-
     final String collectionName = 'studies'
 
     @Override

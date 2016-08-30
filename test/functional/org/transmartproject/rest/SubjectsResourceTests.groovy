@@ -30,18 +30,20 @@ import static org.hamcrest.Matchers.*
 
 class SubjectsResourceTests extends ResourceTestCase {
 
+    def version = 'v1'
     def study = 'study_id_1'
     def defaultTrial = study.toUpperCase()
     def subjectId = -101
     def UNKNOWN = 'UNKOWN' // funny typo here
     def concept = 'bar'
 
-    def subjectsPerConceptUrl = "/studies/${study}/concepts/${concept}/subjects"
-    def subjectsPerStudyUrl = "/studies/${study}/subjects"
+    def subjectsPerConceptUrl = "/${version}/studies/${study}/concepts/${concept}/subjects"
+    def subjectsPerStudyUrl = "/${version}/studies/${study}/subjects"
 
-    def subjectUrl = "/studies/${study}/subjects/${subjectId}"
-    def subjectUrl2 = "/studies/${study}/subjects/-102"
-    def subjectUrl3 = "/studies/${study}/subjects/-103"
+    def subjectUrl = "/$version/studies/${study}/subjects/${subjectId}"
+    def subjectUrl2 = "/$version/studies/${study}/subjects/-102"
+    def subjectUrl3 = "/$version/studies/${study}/subjects/-103"
+
 
     void testShowAsJson() {
         def result = getAsJson subjectUrl
@@ -109,13 +111,14 @@ class SubjectsResourceTests extends ResourceTestCase {
                 )
     }
 
-    def subjectsPerLongConceptUrl  = '/studies/study_id_2/concepts/long%20path/with%25some%24characters_/subjects'
+    def subjectsPerLongConceptUrl  = "/$version/studies/study_id_2/concepts/long%20path/with%25some%24characters_/subjects"
 
     void testSubjectsIndexOnLongConcept() {
         def result = getAsHal subjectsPerLongConceptUrl
         assertStatus 200
 
         assertThat result, is(halIndexResponse(
+
                 subjectsPerLongConceptUrl,
                 [subjects: any(List)]
         ))

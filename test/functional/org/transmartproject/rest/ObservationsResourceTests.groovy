@@ -33,6 +33,7 @@ import static org.thehyve.commons.test.FastMatchers.mapWith
 
 class ObservationsResourceTests extends ResourceTestCase {
 
+    def version = 'v1'
     def studyId = 'STUDY_ID_1'
     def label = "\\foo\\study1\\bar\\"
 
@@ -55,7 +56,7 @@ class ObservationsResourceTests extends ResourceTestCase {
     ]
 
     void testListAllObservationsForStudy() {
-        get("${baseURL}studies/${studyId}/observations")
+        get("${baseURL}$version/studies/${studyId}/observations")
         assertStatus 200
 
         assertThat JSON, listOfWithOrder(study1BarExpectedObservations)
@@ -63,7 +64,7 @@ class ObservationsResourceTests extends ResourceTestCase {
 
     void testListAllObservationsForSubject() {
         def subjectId = -101
-        get("${baseURL}studies/${studyId}/subjects/${subjectId}/observations")
+        get("${baseURL}$version/studies/${studyId}/subjects/${subjectId}/observations")
         assertStatus 200
 
         assertThat JSON, contains(
@@ -88,14 +89,14 @@ class ObservationsResourceTests extends ResourceTestCase {
 
     void testListAllObservationsForConcept() {
         def conceptId = 'bar'
-        get("${baseURL}studies/${studyId}/concepts/${conceptId}/observations")
+        get("${baseURL}$version/studies/${studyId}/concepts/${conceptId}/observations")
         assertStatus 200
 
         assertThat JSON, listOfWithOrder(study1BarExpectedObservations)
     }
 
     void testVariablesAreNormalized() {
-        get("/studies/study_id_2/concepts/sex/observations")
+        get("/$version/studies/study_id_2/concepts/sex/observations")
         assertStatus 200
 
         assertThat JSON, allOf(
@@ -109,7 +110,7 @@ class ObservationsResourceTests extends ResourceTestCase {
     }
 
     void testIndexStandalonePatientSet() {
-        get('/observations') {
+        get("/$version/observations") {
             patient_sets = '1'
             concept_paths = '\\foo\\study1\\bar\\'
         }
@@ -120,7 +121,7 @@ class ObservationsResourceTests extends ResourceTestCase {
     }
 
     void testIndexStandalone() {
-        get('/observations') {
+        get("/$version/observations") {
             patients = -101
             concept_paths = '\\foo\\study1\\bar\\'
         }
@@ -133,7 +134,7 @@ class ObservationsResourceTests extends ResourceTestCase {
     }
 
     void testIndexStandaloneDefaultIsNormalizedLeaves() {
-        get(('/observations' +
+        get(("/$version/observations" +
                 '?patients=-201' +
                 '&patients=-202' +
                 '&concept_paths=\\foo\\study2\\sex\\')
@@ -154,10 +155,10 @@ class ObservationsResourceTests extends ResourceTestCase {
     }
 
     void testIndexStandaloneDifferentVariableType() {
-        get(('/observations?variable_type=terminal_concept_variable' +
-                '&patients=-201' +
-                '&patients=-202' +
-                '&concept_paths=\\foo\\study2\\sex\\')
+        get(("/$version/observations?variable_type=terminal_concept_variable" +
+                "&patients=-201" +
+                "&patients=-202" +
+                "&concept_paths=\\foo\\study2\\sex\\")
                 .replaceAll('\\\\', '%5C'))
 
         assertStatus 200
@@ -170,7 +171,7 @@ class ObservationsResourceTests extends ResourceTestCase {
     }
 
     void testHalStandalone() {
-        getAsHal('/observations') {
+        getAsHal("/$version/observations") {
             patients = -101
             concept_paths = '\\foo\\study1\\bar\\'
         }
