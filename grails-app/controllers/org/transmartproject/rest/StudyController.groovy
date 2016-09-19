@@ -27,12 +27,17 @@ package org.transmartproject.rest
 
 import grails.rest.Link
 import grails.rest.render.util.AbstractLinkingRenderer
+import org.springframework.beans.factory.annotation.Autowired
+import org.transmartproject.db.accesscontrol.AccessControlChecks
+import org.transmartproject.rest.misc.CurrentUser
 
 import javax.annotation.Resource
 
 import org.transmartproject.core.ontology.StudiesResource
 import org.transmartproject.core.ontology.Study
 import org.transmartproject.rest.marshallers.ContainerResponseWrapper
+
+import static org.transmartproject.core.users.ProtectedOperation.WellKnownOperations.READ
 
 class StudyController {
 
@@ -41,11 +46,25 @@ class StudyController {
     @Resource
     StudiesResource studiesResourceService
 
+    @Autowired
+    AccessControlChecks accessControlChecks
+
+    @Autowired
+    CurrentUser currentUser
+
     /** GET request on /studies/
      *  This will return the list of studies, where each study will be rendered in its short format
     */
     def index() {
-        respond wrapStudies(studiesResourceService.studySet)
+        def studiesImpl =  wrapStudies(studiesResourceService.studySet)
+        println("Begin")
+        //Checks to which studies the user has access.
+        studiesImpl.containers.container[0].each { studyImpl ->
+            boolean access = currentUser.canPerform(READ, studyImpl)
+            println("access: $access")
+        }
+        println("End ")
+        respond studiesImpl
     }
 
     /** GET request on /studies/${id}
@@ -54,7 +73,11 @@ class StudyController {
      *  @param name the name of the study
      */
     def show(String id) {
-        respond studiesResourceService.getStudyById(id)
+        def studyImpl =  studiesResourceService.getStudyById(id)
+        //Check if the user has access to the specific study.
+        boolean access = currentUser.canPerform(READ, studyImpl)
+        println("access: $access")
+        respond studyImpl
     }
     
     private wrapStudies(Object source) {
