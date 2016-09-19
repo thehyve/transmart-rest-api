@@ -61,7 +61,8 @@ class StudyController {
         //Checks to which studies the user has access.
         studiesImpl.containers.container[0].each { studyImpl ->
             boolean access = currentUser.canPerform(READ, studyImpl)
-            println("access: $access")
+            studyImpl.access = access
+            println("access: $studyImpl.access")
         }
         println("End ")
         respond studiesImpl
@@ -76,7 +77,8 @@ class StudyController {
         def studyImpl =  studiesResourceService.getStudyById(id)
         //Check if the user has access to the specific study.
         boolean access = currentUser.canPerform(READ, studyImpl)
-        println("access: $access")
+        studyImpl.access = access
+        println("access: $studyImpl.access")
         respond studyImpl
     }
     

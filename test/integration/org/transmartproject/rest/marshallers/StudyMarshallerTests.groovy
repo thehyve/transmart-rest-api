@@ -47,9 +47,10 @@ class StudyMarshallerTests {
     private static final String ONTOLOGY_KEY = '\\\\foo bar\\foo\\test_study\\'
     private static final String ONTOLOGY_FULL_NAME = '\\foo\\test_study\\'
     private static final String version = 'v1'
+    private static final boolean ACCESS = true
 
     Study getMockStudy() {
-        createStudy(STUDY_ID, ONTOLOGY_KEY)
+        createStudy(STUDY_ID, ONTOLOGY_KEY, ACCESS)
     }
 
     @Test
@@ -59,6 +60,7 @@ class StudyMarshallerTests {
         JsonSlurper slurper = new JsonSlurper()
         assertThat slurper.parseText(json.toString()), allOf(
                 hasEntry('id', STUDY_ID),
+                hasEntry('access', ACCESS),
                 hasEntry(is('ontologyTerm'), allOf(
                         hasEntry('name', ONTOLOGY_TERM_NAME),
                         hasEntry('fullName', ONTOLOGY_FULL_NAME),
@@ -78,6 +80,7 @@ class StudyMarshallerTests {
         JsonSlurper slurper = new JsonSlurper()
         assertThat slurper.parseText(stringResult), allOf(
                 hasEntry('id', STUDY_ID),
+                hasEntry('access', ACCESS),
                 hasEntry(is('_links'),
                         hasEntry(is('self'),
                                 hasEntry('href', "/$version/studies/${STUDY_ID.toLowerCase()}".toString()))),

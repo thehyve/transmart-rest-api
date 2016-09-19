@@ -41,6 +41,7 @@ class StudiesResourceTests extends ResourceTestCase {
         assertThat JSON, hasEntry(is('studies'), contains(
                 allOf(
                         hasEntry('id', 'STUDY_ID_1'),
+                        hasEntry('access', true),
                         hasEntry(is('ontologyTerm'), allOf(
                                 hasEntry('name', 'study1'),
                                 hasEntry('fullName', '\\foo\\study1\\'),
@@ -49,6 +50,7 @@ class StudiesResourceTests extends ResourceTestCase {
                 ),
                 allOf(
                         hasEntry('id', 'STUDY_ID_2'),
+                        hasEntry('access', true),
                         hasEntry(is('ontologyTerm'), allOf(
                                 hasEntry('name', 'study2'),
                                 hasEntry('fullName', '\\foo\\study2\\'),
@@ -57,6 +59,7 @@ class StudiesResourceTests extends ResourceTestCase {
                 ),
                 allOf(
                         hasEntry('id', 'STUDY_ID_3'),
+                        hasEntry('access', true),
                         hasEntry(is('ontologyTerm'), allOf(
                                 hasEntry('name', 'study3'),
                                 hasEntry('fullName', '\\foo\\study3\\'),
@@ -77,6 +80,7 @@ class StudiesResourceTests extends ResourceTestCase {
             contains(
                 allOf(
                         hasEntry('id', 'STUDY_ID_1'),
+                        hasEntry('access', true),
                         halIndexResponse("/$version/studies/study_id_1", ['ontologyTerm':
                             allOf(
                                 hasEntry('name', 'study1'),
@@ -87,6 +91,7 @@ class StudiesResourceTests extends ResourceTestCase {
                 ),
                 allOf(
                         hasEntry('id', 'STUDY_ID_2'),
+                        hasEntry('access', true),
                         halIndexResponse("/$version/studies/study_id_2", ['ontologyTerm':
                             allOf(
                                 hasEntry('name', 'study2'),
@@ -97,6 +102,7 @@ class StudiesResourceTests extends ResourceTestCase {
                 ),
                 allOf(
                         hasEntry('id', 'STUDY_ID_3'),
+                        hasEntry('access', true),
                         halIndexResponse("/$version/studies/study_id_3", ['ontologyTerm':
                             allOf(
                                 hasEntry('name', 'study3'),
@@ -116,6 +122,7 @@ class StudiesResourceTests extends ResourceTestCase {
 
         assertThat JSON, allOf(
                 hasEntry('id', 'STUDY_ID_1'),
+                hasEntry('access', true),
                 hasEntry(is('ontologyTerm'), allOf(
                         hasEntry('name', 'study1'),
                         hasEntry('fullName', '\\foo\\study1\\'),
@@ -133,6 +140,7 @@ class StudiesResourceTests extends ResourceTestCase {
         
         assertThat result, allOf(
             hasEntry('id', 'STUDY_ID_1'),
+            hasEntry('access', true),
             halIndexResponse("/$version/studies/${studyId}".toLowerCase(), [
                 'ontologyTerm': allOf(
                     hasEntry('name', 'study1'),
