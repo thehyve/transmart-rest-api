@@ -39,7 +39,7 @@ class StubStudyLoadingService extends StudyLoadingService {
         storedStudy
     }
 
-    static Study createStudy(String studyId, String key, boolean access) {
+    static Study createStudy(String studyId, String key, boolean access = null) {
         def study
         study = [
                 getId: { -> studyId },

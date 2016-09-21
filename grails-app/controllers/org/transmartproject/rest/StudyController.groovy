@@ -57,14 +57,11 @@ class StudyController {
     */
     def index() {
         def studiesImpl =  wrapStudies(studiesResourceService.studySet)
-        println("Begin")
         //Checks to which studies the user has access.
         studiesImpl.containers.container[0].each { studyImpl ->
             boolean access = currentUser.canPerform(READ, studyImpl)
             studyImpl.access = access
-            println("access: $studyImpl.access")
         }
-        println("End ")
         respond studiesImpl
     }
 
@@ -78,7 +75,6 @@ class StudyController {
         //Check if the user has access to the specific study.
         boolean access = currentUser.canPerform(READ, studyImpl)
         studyImpl.access = access
-        println("access: $studyImpl.access")
         respond studyImpl
     }
     
