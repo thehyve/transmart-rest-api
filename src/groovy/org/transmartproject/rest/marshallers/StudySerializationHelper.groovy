@@ -47,7 +47,11 @@ class StudySerializationHelper extends AbstractHalOrJsonSerializationHelper<Stud
     @Override
     Map<String, Object> convertToMap(Study study) {
         def term = new OntologyTermWrapper(study.ontologyTerm, true)
-            [id: study.id, ontologyTerm: term]
+        def mapResponse = [id: study.id, ontologyTerm: term]
+        if (study.hasProperty('access')){
+            mapResponse['access'] = study.access
+        }
+        mapResponse
     }
 
     @Override
@@ -55,3 +59,4 @@ class StudySerializationHelper extends AbstractHalOrJsonSerializationHelper<Stud
         ['ontologyTerm'] as Set
     }
 }
+

@@ -27,12 +27,16 @@ package org.transmartproject.rest
 
 import grails.rest.Link
 import grails.rest.render.util.AbstractLinkingRenderer
+import org.springframework.beans.factory.annotation.Autowired
+import org.transmartproject.rest.misc.CurrentUser
 
 import javax.annotation.Resource
 
 import org.transmartproject.core.ontology.StudiesResource
 import org.transmartproject.core.ontology.Study
 import org.transmartproject.rest.marshallers.ContainerResponseWrapper
+
+import static org.transmartproject.core.users.ProtectedOperation.WellKnownOperations.READ
 
 class StudyController {
 
@@ -41,11 +45,21 @@ class StudyController {
     @Resource
     StudiesResource studiesResourceService
 
+    @Autowired
+    CurrentUser currentUser
+
     /** GET request on /studies/
      *  This will return the list of studies, where each study will be rendered in its short format
     */
     def index() {
-        respond wrapStudies(studiesResourceService.studySet)
+        def studies = studiesResourceService.studySet
+        studies.each { study ->
+            boolean access = currentUser.canPerform(READ, study)
+            study.access = access
+        }
+        def studiesImpl =  wrapStudies(studies)
+        //Checks to which studies the user has access.
+        respond studiesImpl
     }
 
     /** GET request on /studies/${id}
@@ -54,7 +68,11 @@ class StudyController {
      *  @param name the name of the study
      */
     def show(String id) {
-        respond studiesResourceService.getStudyById(id)
+        def studyImpl =  studiesResourceService.getStudyById(id)
+        //Check if the user has access to the specific study.
+        boolean access = currentUser.canPerform(READ, studyImpl)
+        studyImpl.access = access
+        respond studyImpl
     }
     
     private wrapStudies(Object source) {
