@@ -28,7 +28,6 @@ package org.transmartproject.rest
 import grails.rest.Link
 import grails.rest.render.util.AbstractLinkingRenderer
 import org.springframework.beans.factory.annotation.Autowired
-import org.transmartproject.db.accesscontrol.AccessControlChecks
 import org.transmartproject.rest.misc.CurrentUser
 
 import javax.annotation.Resource
@@ -47,21 +46,19 @@ class StudyController {
     StudiesResource studiesResourceService
 
     @Autowired
-    AccessControlChecks accessControlChecks
-
-    @Autowired
     CurrentUser currentUser
 
     /** GET request on /studies/
      *  This will return the list of studies, where each study will be rendered in its short format
     */
     def index() {
-        def studiesImpl =  wrapStudies(studiesResourceService.studySet)
-        //Checks to which studies the user has access.
-        studiesImpl.containers.container[0].each { studyImpl ->
-            boolean access = currentUser.canPerform(READ, studyImpl)
-            studyImpl.access = access
+        def studies = studiesResourceService.studySet
+        studies.each { study ->
+            boolean access = currentUser.canPerform(READ, study)
+            study.access = access
         }
+        def studiesImpl =  wrapStudies(studies)
+        //Checks to which studies the user has access.
         respond studiesImpl
     }
 
