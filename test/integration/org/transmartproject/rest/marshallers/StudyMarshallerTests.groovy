@@ -60,12 +60,12 @@ class StudyMarshallerTests {
         JsonSlurper slurper = new JsonSlurper()
         assertThat slurper.parseText(json.toString()), allOf(
                 hasEntry('id', STUDY_ID),
-                hasEntry('access', ACCESS),
                 hasEntry(is('ontologyTerm'), allOf(
                         hasEntry('name', ONTOLOGY_TERM_NAME),
                         hasEntry('fullName', ONTOLOGY_FULL_NAME),
                         hasEntry('key', ONTOLOGY_KEY),
-                )))
+                )),
+                hasEntry('access', ACCESS))
     }
 
     @Test

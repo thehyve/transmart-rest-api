@@ -27,27 +27,28 @@ package org.transmartproject.rest.marshallers
 
 import grails.rest.Link
 import org.transmartproject.core.ontology.Study
+import org.transmartproject.db.ontology.StudyAccessImpl
 import org.transmartproject.rest.StudyLoadingService
 
 import javax.annotation.Resource
 
 import static grails.rest.render.util.AbstractLinkingRenderer.RELATIONSHIP_SELF
 
-class StudySerializationHelper extends AbstractHalOrJsonSerializationHelper<Study> {
+class StudyAccessSerializationHelper extends AbstractHalOrJsonSerializationHelper<StudyAccessImpl> {
 
-    final Class targetType = Study
+    final Class targetType = StudyAccessImpl
     final String collectionName = 'studies'
 
     @Override
-    Collection<Link> getLinks(Study study) {
+    Collection<Link> getLinks(StudyAccessImpl StudyAccessImpl) {
         [new Link(RELATIONSHIP_SELF, '/studies/' +
-                study.id.toLowerCase(Locale.ENGLISH).encodeAsURL())]
+                StudyAccessImpl.study.id.toLowerCase(Locale.ENGLISH).encodeAsURL())]
     }
 
     @Override
-    Map<String, Object> convertToMap(Study study) {
-        def term = new OntologyTermWrapper(study.ontologyTerm, true)
-        def mapResponse = [id: study.id, ontologyTerm: term]
+    Map<String, Object> convertToMap(StudyAccessImpl StudyAccessImpl) {
+        def term = new OntologyTermWrapper(StudyAccessImpl.study.ontologyTerm, true)
+        def mapResponse = [id: StudyAccessImpl.study.id, ontologyTerm: term, accessibility:StudyAccessImpl.accessibility]
         mapResponse
     }
 
