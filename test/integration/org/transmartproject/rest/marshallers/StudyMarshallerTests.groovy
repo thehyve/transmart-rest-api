@@ -64,8 +64,7 @@ class StudyMarshallerTests {
                         hasEntry('name', ONTOLOGY_TERM_NAME),
                         hasEntry('fullName', ONTOLOGY_FULL_NAME),
                         hasEntry('key', ONTOLOGY_KEY),
-                )),
-                hasEntry('access', ACCESS))
+                )))
     }
 
     @Test
@@ -80,7 +79,6 @@ class StudyMarshallerTests {
         JsonSlurper slurper = new JsonSlurper()
         assertThat slurper.parseText(stringResult), allOf(
                 hasEntry('id', STUDY_ID),
-                hasEntry('access', ACCESS),
                 hasEntry(is('_links'),
                         hasEntry(is('self'),
                                 hasEntry('href', "/$version/studies/${STUDY_ID.toLowerCase()}".toString()))),

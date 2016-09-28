@@ -53,7 +53,7 @@ class StudyAccessSerializationHelper extends AbstractHalOrJsonSerializationHelpe
     }
 
     @Override
-    Set<String> getEmbeddedEntities(Study object) {
+    Set<String> getEmbeddedEntities(StudyAccessImpl object) {
         ['ontologyTerm'] as Set
     }
 }

@@ -62,8 +62,8 @@ class StudyController {
             boolean accessExport = currentUser.canPerform(EXPORT, study)
             //Possibility of adding more access types.
             Map accessibility = [
-                    accessview:accessView,
-                    accessexport:accessExport]
+                    accessView:accessView,
+                    accessExport:accessExport]
             StudyAccessImpl studyAccessImpl= new StudyAccessImpl(
                     accessibility:accessibility,
                     study:study)
@@ -85,8 +85,8 @@ class StudyController {
         boolean accessExport = currentUser.canPerform(EXPORT, studyImpl)
         //Possibility of adding more access types.
         Map accessibility = [
-                accessview:accessView,
-                accessexport:accessExport]
+                accessView:accessView,
+                accessExport:accessExport]
         StudyAccessImpl studyAccessImpl = new StudyAccessImpl(
                 accessibility:accessibility,
                 study:studyImpl,
