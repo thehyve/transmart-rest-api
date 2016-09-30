@@ -37,7 +37,7 @@ import static grails.rest.render.util.AbstractLinkingRenderer.RELATIONSHIP_SELF
 class StudyAccessSerializationHelper extends AbstractHalOrJsonSerializationHelper<StudyAccessImpl> {
 
     final Class targetType = StudyAccessImpl
-    final String collectionName = 'studies'
+    final String collectionName = 'studiesAccess'
 
     @Override
     Collection<Link> getLinks(StudyAccessImpl StudyAccessImpl) {
