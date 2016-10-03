@@ -35,8 +35,10 @@ import javax.annotation.Resource
 import org.transmartproject.core.ontology.StudiesResource
 import org.transmartproject.core.ontology.Study
 import org.transmartproject.rest.marshallers.ContainerResponseWrapper
+import org.transmartproject.db.ontology.StudyAccessImpl
 
-import static org.transmartproject.core.users.ProtectedOperation.WellKnownOperations.READ
+import static org.transmartproject.core.users.ProtectedOperation.WellKnownOperations.API_READ
+import static org.transmartproject.core.users.ProtectedOperation.WellKnownOperations.EXPORT
 
 class StudyController {
 
@@ -52,14 +54,23 @@ class StudyController {
      *  This will return the list of studies, where each study will be rendered in its short format
     */
     def index() {
+        def studiesAccess = []
         def studies = studiesResourceService.studySet
-        studies.each { study ->
-            boolean access = currentUser.canPerform(READ, study)
-            study.access = access
-        }
-        def studiesImpl =  wrapStudies(studies)
         //Checks to which studies the user has access.
-        respond studiesImpl
+        studies.each { study ->
+            boolean accessView = currentUser.canPerform(API_READ, study)
+            boolean accessExport = currentUser.canPerform(EXPORT, study)
+            //Possibility of adding more access types.
+            Map accessibility = [
+                    accessView:accessView,
+                    accessExport:accessExport]
+            StudyAccessImpl studyAccessImpl= new StudyAccessImpl(
+                    accessibility:accessibility,
+                    study:study)
+            studiesAccess.add(studyAccessImpl)
+        }
+        def studiesAccessWrapped =  wrapStudies(studiesAccess)
+        respond studiesAccessWrapped
     }
 
     /** GET request on /studies/${id}
@@ -70,9 +81,17 @@ class StudyController {
     def show(String id) {
         def studyImpl =  studiesResourceService.getStudyById(id)
         //Check if the user has access to the specific study.
-        boolean access = currentUser.canPerform(READ, studyImpl)
-        studyImpl.access = access
-        respond studyImpl
+        boolean accessView = currentUser.canPerform(API_READ, studyImpl)
+        boolean accessExport = currentUser.canPerform(EXPORT, studyImpl)
+        //Possibility of adding more access types.
+        Map accessibility = [
+                accessView:accessView,
+                accessExport:accessExport]
+        StudyAccessImpl studyAccessImpl = new StudyAccessImpl(
+                accessibility:accessibility,
+                study:studyImpl,
+                )
+        respond studyAccessImpl
     }
     
     private wrapStudies(Object source) {
