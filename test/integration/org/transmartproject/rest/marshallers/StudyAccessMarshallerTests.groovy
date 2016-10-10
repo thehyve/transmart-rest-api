@@ -47,11 +47,11 @@ class StudyAccessMarshallerTests {
     private static final String ONTOLOGY_KEY = '\\\\foo bar\\foo\\test_study\\'
     private static final String ONTOLOGY_FULL_NAME = '\\foo\\test_study\\'
     private static final String version = 'v1'
-    private static final Map accessibleByUser = [ view : true,
+    private static final Map ACCESSIBLEBYUSER = [ view : true,
                                                export : true ]
 
     StudyAccess getMockStudyAccess() {
-        createStudyAccess(STUDY_ID, ONTOLOGY_KEY, accessibleByUser)
+        createStudyAccess(STUDY_ID, ONTOLOGY_KEY, ACCESSIBLEBYUSER)
     }
 
     @Test
@@ -68,7 +68,7 @@ class StudyAccessMarshallerTests {
                         hasEntry('fullName', ONTOLOGY_FULL_NAME),
                         hasEntry('key', ONTOLOGY_KEY),
                     )))),
-                hasEntry('accessibleByUser', accessibleByUser)
+                hasEntry('accessibleByUser', ACCESSIBLEBYUSER)
                     )
 
     }
@@ -98,7 +98,7 @@ class StudyAccessMarshallerTests {
                                 hasEntry('fullName', ONTOLOGY_FULL_NAME),
                                 hasEntry('key', ONTOLOGY_KEY),
                         ))))),
-                hasEntry('accessibleByUser', accessibleByUser),)
+                hasEntry('accessibleByUser', ACCESSIBLEBYUSER),)
     }
 
 }
