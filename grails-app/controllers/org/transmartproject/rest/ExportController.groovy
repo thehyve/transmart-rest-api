@@ -27,7 +27,7 @@ class ExportController {
                               "Demographics":"\\\\Public Studies\\Public Studies\\GSE37427\\Demographics\\",
                               "Trial Arm": "\\\\Public Studies\\Public Studies\\GSE37427\\Demographics\\Trial Arm\\"],
                             //"Human": "\\\\Public Studies\\Public Studies\\GSE37427\\Biomarker Data\\MET998\\Human\\"],
-                resultInstanceIds: [28741, 28740],
+                resultInstanceIds: [28741, 28740]
         ]
         throwIfInvalid exportCommand
         def files = restExportService.export(arguments)
