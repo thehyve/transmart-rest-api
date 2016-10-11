@@ -17,9 +17,19 @@ class ExportController {
 
 
     def export(ExportCommand exportCommand) {
+        // Used for retrieving the resultinstanceIds
+        // def yesterday = new Date() -1
+        // def result = QtQueryResultInstance.findAllByStartDateGreaterThan(yesterday )
+        // render(result)
+        def arguments = [
+                conceptKeys: ["GPL570_BOGUS": "\\\\Public Studies\\Public Studies\\NOZSCORE\\Biomarker Data\\GPL570_BOGUS",
+                              "Subjects":"\\\\Public Studies\\Public Studies\\NOZSCORE\\Subjects\\"],
+                resultInstanceIds: [28734, 28735],
+        ]
         throwIfInvalid exportCommand
         def files = restExportService.export(arguments)
-        sendFileService.sendFile servletContext, request, response, files[0]  //TODO: send all files, for instance as a zip
+        File zipFile = restExportService.createZip(files)
+        sendFileService.sendFile servletContext, request, response, zipFile
     }
 
     private void throwIfInvalid(command) {
@@ -30,6 +40,7 @@ class ExportController {
             throw new InvalidArgumentsException("Invalid input: $errorStrings")
         }
     }
+
 
 }
 
