@@ -13,7 +13,7 @@ class ExportTests extends ResourceTestCase{
     String version = "v1"
 
     void testExportArgumentError() {
-        def resp = postAsHal("/export/export") {
+        def resp = postAsHal("/$version/export/export") {
             contentType MimeType.JSON.name
             body {
                 arguments: [
@@ -27,7 +27,7 @@ class ExportTests extends ResourceTestCase{
     }
 
     void testExportClinicalData() {
-        def resp = postAsHal("/export/export") {
+        def resp = postAsHal("/$version/export/export") {
             contentType MimeType.JSON.name
             body {
                 arguments: [
