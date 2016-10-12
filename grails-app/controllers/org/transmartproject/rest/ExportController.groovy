@@ -25,13 +25,19 @@ class ExportController {
         def arguments = [
                 conceptKeys: ["MET998": "\\\\Public Studies\\Public Studies\\GSE37427\\Biomarker Data\\MET998\\",
                               "Demographics":"\\\\Public Studies\\Public Studies\\GSE37427\\Demographics\\",
-                              "Trial Arm": "\\\\Public Studies\\Public Studies\\GSE37427\\Demographics\\Trial Arm\\"],
+                              "Trial Arm": "\\\\Public Studies\\Public Studies\\GSE37427\\Demographics\\Trial Arm\\",
+                             "Control" : "\\\\Public Studies\\Public Studies\\GSE37427\\Demographics\\Trial Arm\\Control\\"],
                             //"Human": "\\\\Public Studies\\Public Studies\\GSE37427\\Biomarker Data\\MET998\\Human\\"],
                 resultInstanceIds: [28741, 28740]
         ]
         throwIfInvalid exportCommand
-        def files = restExportService.export(arguments)
-        File zipFile = restExportService.createZip(files)
+        def filesList = []
+        arguments.resultInstanceIds.each { it ->
+            def files = restExportService.export(conceptKeys: arguments.conceptKeys, resultInstanceIds: [it])
+            files = restExportService.parseFiles(files)
+            filesList.add(files)
+        }
+        File zipFile = restExportService.createZip(filesList)
         sendFileService.sendFile servletContext, request, response, zipFile
     }
 
