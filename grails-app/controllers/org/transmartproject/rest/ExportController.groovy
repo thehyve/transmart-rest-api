@@ -1,15 +1,17 @@
 package org.transmartproject.rest
 
 import grails.validation.Validateable
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
 import org.springframework.beans.factory.annotation.Autowired
 import org.transmartproject.core.exceptions.InvalidArgumentsException
 import org.transmartproject.db.RestExportService
 import org.transmartproject.db.querytool.QtQueryResultInstance
+import org.transmartproject.rest.misc.JsonParametersParser
 
 class ExportController {
 
     static responseFormats = ['json', 'hal']
-
 
     @Autowired
     RestExportService restExportService
@@ -18,34 +20,21 @@ class ExportController {
 
 
     def export(ExportCommand exportCommand) {
-        //Used for retrieving the resultinstanceIds
-        def yesterday = new Date() -1
-        def result = QtQueryResultInstance.findAllByStartDateGreaterThan(yesterday )
-        render(result)
-        def arguments_CLUC = [
-                conceptKeys: ["Agilent miRNA microarray": "\\\\Public Studies\\Public Studies\\CLUC\\Molecular profiling\\High-throughput molecular profiling\\Expression (miRNA)\\Agilent miRNA microarray\\",
-                              "Demographics":"\\\\Public Studies\\Public Studies\\CLUC\\Characteristics\\",
-                              "MZ ratios":"\\\\Public Studies\\Public Studies\\CLUC\\Molecular profiling\\High-throughput molecular profiling\\Expression (protein)\\LC-MS-MS\\Protein level\\TPNT\\MZ ratios\\" ],
-                resultInstanceIds: [28742, 28743]
-        ]
-        def arguments_GSE37427= [
-                conceptKeys: ["MET998": "\\\\Public Studies\\Public Studies\\GSE37427\\Biomarker Data\\MET998\\",
-                              "Demographics":"\\\\Public Studies\\Public Studies\\GSE37427\\Demographics\\",
-                              "Trial Arm": "\\\\Public Studies\\Public Studies\\GSE37427\\Demographics\\Trial Arm\\",
-                              "Control" : "\\\\Public Studies\\Public Studies\\GSE37427\\Demographics\\Trial Arm\\Control\\"],
-                //"Human": "\\\\Public Studies\\Public Studies\\GSE37427\\Biomarker Data\\MET998\\Human\\"],
-                resultInstanceIds: [28741, 28740]
-        ]
-        throwIfInvalid exportCommand
         def filesList = []
-        arguments_CLUC.resultInstanceIds.each { it ->
-            def files1 = restExportService.export(conceptKeys: arguments_CLUC.conceptKeys, resultInstanceIds: [it])
-            //def files2 = restExportService.parseFiles(files1)
-            filesList += files1
-            //filesList.add(files2)
+        throwIfInvalid exportCommand
+        def arguments = retrieveArguments()
+        arguments.each { it ->
+            def exportFiles = restExportService.export(it)
+            def parsedFiles = restExportService.parseFiles(exportFiles, it.exportDataFormat)
+            filesList += parsedFiles
         }
         File zipFile = restExportService.createZip(filesList)
         sendFileService.sendFile servletContext, request, response, zipFile
+    }
+
+    def datatypes(){
+        //Retrieve datatype
+        def arguments = JsonParametersParser.parseConstraints(params)
     }
 
     private void throwIfInvalid(command) {
@@ -55,6 +44,54 @@ class ExportController {
             }
             throw new InvalidArgumentsException("Invalid input: $errorStrings")
         }
+    }
+
+    def retrieveArguments(){
+        //Used for retrieving the resultinstanceIds
+        //def yesterday = new Date() -1
+        //def result = QtQueryResultInstance.findAllByStartDateGreaterThan(yesterday )
+        //render(result)
+        def arguments_GSE37427= [
+                conceptKeys: ["MET998": "\\\\Public Studies\\Public Studies\\GSE37427\\Biomarker Data\\MET998\\",
+                              "Demographics":"\\\\Public Studies\\Public Studies\\GSE37427\\Demographics\\",
+                              "Trial Arm": "\\\\Public Studies\\Public Studies\\GSE37427\\Demographics\\Trial Arm\\",
+                              "Control" : "\\\\Public Studies\\Public Studies\\GSE37427\\Demographics\\Trial Arm\\Control\\"],
+                //"Human": "\\\\Public Studies\\Public Studies\\GSE37427\\Biomarker Data\\MET998\\Human\\"],
+                resultInstanceIds: [28741, 28740],
+                outputFormat: "tsv"
+        ]
+        def arguments_CLUC_separated =
+                [[
+                         "resultInstanceIds": [28742],
+                         "conceptKeys": [
+                                 "Agilent miRNA microarray": "\\\\Public Studies\\Public Studies\\CLUC\\Molecular profiling\\High-throughput molecular profiling\\Expression (miRNA)\\Agilent miRNA microarray\\",
+                                 "Demographics": "\\\\Public Studies\\Public Studies\\CLUC\\Characteristics\\",
+                                 "MZ ratios": "\\\\Public Studies\\Public Studies\\CLUC\\Molecular profiling\\High-throughput molecular profiling\\Expression (protein)\\LC-MS-MS\\Protein level\\TPNT\\MZ ratios\\"
+                         ],
+                         "exportDataFormat": ["csv", "tsv"]
+                 ], [
+                         "resultInstanceIds": [28743],
+                         "conceptKeys": [
+                                 "Agilent miRNA microarray": "\\\\Public Studies\\Public Studies\\CLUC\\Molecular profiling\\High-throughput molecular profiling\\Expression (miRNA)\\Agilent miRNA microarray\\",
+                                 "Demographics": "\\\\Public Studies\\Public Studies\\CLUC\\Characteristics\\",
+                                 "MZ ratios": "\\\\Public Studies\\Public Studies\\CLUC\\Molecular profiling\\High-throughput molecular profiling\\Expression (protein)\\LC-MS-MS\\Protein level\\TPNT\\MZ ratios\\"
+                         ],
+                         "exportDataFormat": ["tsv"]
+                 ]]
+        def arguments_CLUC_merged =
+                [[
+                         "resultInstanceIds": [28742, 28743],
+                         "conceptKeys": [
+                                 "Agilent miRNA microarray": "\\\\Public Studies\\Public Studies\\CLUC\\Molecular profiling\\High-throughput molecular profiling\\Expression (miRNA)\\Agilent miRNA microarray\\",
+                                 "Demographics": "\\\\Public Studies\\Public Studies\\CLUC\\Characteristics\\",
+                                 "MZ ratios": "\\\\Public Studies\\Public Studies\\CLUC\\Molecular profiling\\High-throughput molecular profiling\\Expression (protein)\\LC-MS-MS\\Protein level\\TPNT\\MZ ratios\\"
+                         ],
+                         "exportDataFormat": ["csv", "tsv"]
+                 ]]
+        def argumentsJSON = JsonOutput.toJson(arguments_CLUC_separated)
+        def jsonSlurper = new JsonSlurper()
+        def arguments = jsonSlurper.parseText(argumentsJSON)
+        arguments
     }
 
 
