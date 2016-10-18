@@ -22,8 +22,8 @@ class ExportController {
     def export(ExportCommand exportCommand) {
         def filesList = []
         throwIfInvalid exportCommand
-        def arguments = retrieveArguments()
-        arguments.each { it ->
+        //def arguments = retrieveArguments()
+        exportCommand.each { it ->
             def exportFiles = restExportService.export(it)
             def parsedFiles = restExportService.parseFiles(exportFiles, it.exportDataFormat)
             filesList += parsedFiles
@@ -51,14 +51,14 @@ class ExportController {
         //def yesterday = new Date() -1
         //def result = QtQueryResultInstance.findAllByStartDateGreaterThan(yesterday )
         //render(result)
-        def arguments_GSE37427= [
-                conceptKeys: ["MET998": "\\\\Public Studies\\Public Studies\\GSE37427\\Biomarker Data\\MET998\\",
+        def arguments_GSE37427_merged= [
+                "conceptKeys": ["MET998": "\\\\Public Studies\\Public Studies\\GSE37427\\Biomarker Data\\MET998\\",
                               "Demographics":"\\\\Public Studies\\Public Studies\\GSE37427\\Demographics\\",
                               "Trial Arm": "\\\\Public Studies\\Public Studies\\GSE37427\\Demographics\\Trial Arm\\",
                               "Control" : "\\\\Public Studies\\Public Studies\\GSE37427\\Demographics\\Trial Arm\\Control\\"],
                 //"Human": "\\\\Public Studies\\Public Studies\\GSE37427\\Biomarker Data\\MET998\\Human\\"],
-                resultInstanceIds: [28741, 28740],
-                outputFormat: "tsv"
+                "resultInstanceIds": [28741, 28740],
+                "exportDataFormat": ["tsv"]
         ]
         def arguments_CLUC_separated =
                 [[
