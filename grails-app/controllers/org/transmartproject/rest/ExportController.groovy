@@ -9,6 +9,8 @@ import org.transmartproject.db.RestExportService
 import org.transmartproject.db.querytool.QtQueryResultInstance
 import org.transmartproject.rest.misc.JsonParametersParser
 
+import java.nio.file.Path
+
 class ExportController {
 
     static responseFormats = ['json', 'hal']
@@ -19,16 +21,17 @@ class ExportController {
     def sendFileService
 
 
-    def export(ExportCommand exportCommand) {
-        def filesList = []
-        throwIfInvalid exportCommand
-        //def arguments = retrieveArguments()
-        exportCommand.each { it ->
+    def export() {
+        //throwIfInvalid exportCommand
+        //TODO: IDEA restExportService.export() returns list with results object instead of files.
+        def arguments = retrieveArguments()
+        Path tmpPath = restExportService.createTmpDir()
+        arguments.each { it ->
             def exportFiles = restExportService.export(it)
             def parsedFiles = restExportService.parseFiles(exportFiles, it.exportDataFormat)
-            filesList += parsedFiles
+            restExportService.createDirStructure(parsedFiles, tmpPath, it)
         }
-        File zipFile = restExportService.createZip(filesList)
+        File zipFile = restExportService.createZip(tmpPath)
         sendFileService.sendFile servletContext, request, response, zipFile
     }
 
@@ -51,15 +54,32 @@ class ExportController {
         //def yesterday = new Date() -1
         //def result = QtQueryResultInstance.findAllByStartDateGreaterThan(yesterday )
         //render(result)
-        def arguments_GSE37427_merged= [
+        def arguments_GSE37427_merged= [[
                 "conceptKeys": ["MET998": "\\\\Public Studies\\Public Studies\\GSE37427\\Biomarker Data\\MET998\\",
                               "Demographics":"\\\\Public Studies\\Public Studies\\GSE37427\\Demographics\\",
                               "Trial Arm": "\\\\Public Studies\\Public Studies\\GSE37427\\Demographics\\Trial Arm\\",
                               "Control" : "\\\\Public Studies\\Public Studies\\GSE37427\\Demographics\\Trial Arm\\Control\\"],
-                //"Human": "\\\\Public Studies\\Public Studies\\GSE37427\\Biomarker Data\\MET998\\Human\\"],
                 "resultInstanceIds": [28741, 28740],
                 "exportDataFormat": ["tsv"]
-        ]
+        ]]
+        def arguments_two_studies_merged =[[ conceptKeys: [
+                "Biomarker Data":"\\\\Public Studies\\Public Studies\\GSE8581\\Biomarker Data\\",
+                "LOG":"\\\\Public Studies\\Public Studies\\GSE8581\\Biomarker Data\\GPL570_BOGUS\\LOG\\",
+                "Human":"\\\\Public Studies\\Public Studies\\GSE37427\\Biomarker Data\\MET998\\Human\\"],
+                                         resultInstanceIds: [28750, 28751],
+                                         exportDataFormat: ['tsv']]]
+        def arguments_two_studies_separated = [[ conceptKeys: [
+                "Biomarker Data":"\\\\Public Studies\\Public Studies\\GSE8581\\Biomarker Data\\",
+                "GPL570_BOGUS":"\\\\Public Studies\\Public Studies\\GSE8581\\Biomarker Data\\GPL570_BOGUS\\"],
+                                             resultInstanceIds: [28750],
+                                             exportDataFormat: ['tsv']],
+                [ conceptKeys: [
+                                "Human":"\\\\Public Studies\\Public Studies\\GSE37427\\Biomarker Data\\MET998\\Human\\",
+                                "Biomarker Data":"\\\\Public Studies\\Public Studies\\GSE37427\\Biomarker Data\\",
+                "Demographics":"\\\\Public Studies\\Public Studies\\GSE37427\\Demographics\\"],
+                 resultInstanceIds: [28751],
+                 exportDataFormat: ['tsv']
+        ]]
         def arguments_CLUC_separated =
                 [[
                          "resultInstanceIds": [28742],
@@ -88,10 +108,10 @@ class ExportController {
                          ],
                          "exportDataFormat": ["csv", "tsv"]
                  ]]
-        def argumentsJSON = JsonOutput.toJson(arguments_CLUC_separated)
-        def jsonSlurper = new JsonSlurper()
-        def arguments = jsonSlurper.parseText(argumentsJSON)
-        arguments
+        //def argumentsJSON = JsonOutput.toJson(arguments_CLUC_separated)
+        //def jsonSlurper = new JsonSlurper()
+        //def arguments = jsonSlurper.parseText(argumentsJSON)
+        arguments_CLUC_separated
     }
 
 
