@@ -1,10 +1,9 @@
 package org.transmartproject.rest
 
 import grails.validation.Validateable
-import groovy.json.JsonOutput
-import groovy.json.JsonSlurper
 import org.springframework.beans.factory.annotation.Autowired
 import org.transmartproject.core.exceptions.InvalidArgumentsException
+import org.transmartproject.core.ontology.OntologyTerm
 import org.transmartproject.db.RestExportService
 import org.transmartproject.db.querytool.QtQueryResultInstance
 import org.transmartproject.rest.misc.JsonParametersParser
@@ -20,6 +19,7 @@ class ExportController {
 
     def sendFileService
 
+    def conceptsResourceService
 
     def export() {
         //throwIfInvalid exportCommand
@@ -37,7 +37,24 @@ class ExportController {
 
     def datatypes(){
         //Retrieve datatype
-        def arguments = JsonParametersParser.parseConstraints(params)
+        //Get total number of unique patients belonging to the concepts which have the datatype.
+        def concept_arguments = retrieveArguments()
+        List datatypes = []
+        concept_arguments.each { it ->
+            List cohortDataTypes = []
+            it.conceptKeys.each { conceptKey ->
+                Map datatypeMap = [:]
+                OntologyTerm concept = conceptsResourceService.getByKey(conceptKey)
+                def datatype = restExportService.getHighDimMetaData(concept)
+                datatypeMap['conceptKey'] = conceptKey
+                datatypeMap['dataType'] = datatype.get('dataTypes')[0]
+                datatypeMap['numOfPatients'] = 10
+                cohortDataTypes.add(datatypeMap)
+            }
+            datatypes.add(cohortDataTypes)
+        }
+        print(datatypes)
+        respond(datatypes)
     }
 
     private void throwIfInvalid(command) {
@@ -108,10 +125,21 @@ class ExportController {
                          ],
                          "exportDataFormat": ["csv", "tsv"]
                  ]]
+
+        def highdim_datatypes =
+                [["conceptKeys": [
+                        "\\\\Public Studies\\Public Studies\\CLUC\\Molecular profiling\\",
+                        "\\\\Public Studies\\Public Studies\\CLUC\\Molecular profiling\\High-throughput molecular profiling\\Expression (protein)\\LC-MS-MS\\Protein level\\TPNT\\MZ ratios\\"
+                ]],
+                 ["conceptKeys": [
+                         "\\\\Public Studies\\Public Studies\\GSE37427\\Biomarker Data\\",
+                         "\\\\Public Studies\\Public Studies\\GSE37427\\Biomarker Data\\MET998\\Human\\"]
+                ]]
+
         //def argumentsJSON = JsonOutput.toJson(arguments_CLUC_separated)
         //def jsonSlurper = new JsonSlurper()
         //def arguments = jsonSlurper.parseText(argumentsJSON)
-        arguments_CLUC_separated
+        highdim_datatypes
     }
 
 
