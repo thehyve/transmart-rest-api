@@ -34,7 +34,10 @@ class PatientSetController {
      * GET /patient_sets
      */
     def index() {
-        respond queriesResource.getQueryResultsSummaryByUsername(currentUser.getUsername() )
+        String noPatients = "There are no saved patient sets by $currentUser.username"
+        def patientSets = queriesResource.getQueryResultsSummaryByUsername(currentUser.getUsername() )
+        patientSets = patientSets == null ? noPatients : patientSets
+        respond patientSets
     }
 
     /**
