@@ -7,22 +7,35 @@ import org.apache.commons.lang.NullArgumentException
 import org.springframework.beans.factory.annotation.Autowired
 import org.transmartproject.core.exceptions.InvalidArgumentsException
 import org.transmartproject.db.RestExportService
+import org.transmartproject.db.querytool.QtQueryResultInstance
+
+import java.nio.file.Path
 
 class ExportController {
 
     static responseFormats = ['json', 'hal']
-
 
     @Autowired
     RestExportService restExportService
 
     def sendFileService
 
-
+    /**POST request on /export/
+     *  Returns a zipfile containing the data from the selected cohort.
+     *
+     */
     def export(ExportCommand exportCommand) {
         throwIfInvalid exportCommand
-        def files = restExportService.export(arguments)
-        sendFileService.sendFile servletContext, request, response, files[0]  //TODO: send all files, for instance as a zip
+        //TODO: IDEA restExportService.export() returns list with results object instead of files.
+        def arguments = retrieveArguments()
+        Path tmpPath = restExportService.createTmpDir()
+        arguments.each { it ->
+            def exportFiles = restExportService.export(it)
+            def parsedFiles = restExportService.parseFiles(exportFiles, it.exportDataFormat)
+            restExportService.createDirStructure(parsedFiles, tmpPath, it)
+        }
+        File zipFile = restExportService.createZip(tmpPath)
+        sendFileService.sendFile servletContext, request, response, zipFile
     }
 
     /**GET request on /export/datatypes
