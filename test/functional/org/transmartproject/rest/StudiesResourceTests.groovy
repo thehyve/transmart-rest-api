@@ -46,9 +46,9 @@ class StudiesResourceTests extends ResourceTestCase {
                                 hasEntry('fullName', '\\foo\\study1\\'),
                                 hasEntry('key', '\\\\i2b2 main\\foo\\study1\\'),
                         )),
-                        hasEntry(is('accessibility'), allOf(
-                                hasEntry('accessView', true),
-                                hasEntry('accessExport', true),
+                        hasEntry(is('accessibleByUser'), allOf(
+                                hasEntry('view', true),
+                                hasEntry('export', true),
                         ))
                 ),
                 allOf(
@@ -58,9 +58,9 @@ class StudiesResourceTests extends ResourceTestCase {
                                 hasEntry('fullName', '\\foo\\study2\\'),
                                 hasEntry('key', '\\\\i2b2 main\\foo\\study2\\'),
                         )),
-                        hasEntry(is('accessibility'), allOf(
-                                hasEntry('accessView', true),
-                                hasEntry('accessExport', true),
+                        hasEntry(is('accessibleByUser'), allOf(
+                                hasEntry('view', true),
+                                hasEntry('export', true),
                         ))
                 ),
                 allOf(
@@ -70,9 +70,9 @@ class StudiesResourceTests extends ResourceTestCase {
                                 hasEntry('fullName', '\\foo\\study3\\'),
                                 hasEntry('key', '\\\\i2b2 main\\foo\\study3\\'),
                         )),
-                        hasEntry(is('accessibility'), allOf(
-                                hasEntry('accessView', true),
-                                hasEntry('accessExport', true),
+                        hasEntry(is('accessibleByUser'), allOf(
+                                hasEntry('view', true),
+                                hasEntry('export', true),
                         ))
                 )
         ))
@@ -95,7 +95,11 @@ class StudiesResourceTests extends ResourceTestCase {
                                 hasEntry('fullName', '\\foo\\study1\\'),
                                 hasEntry('key', '\\\\i2b2 main\\foo\\study1\\'),
                             )
-                        ])
+                        ]),
+                        hasEntry(is('accessibleByUser'), allOf(
+                                hasEntry('view', true),
+                                hasEntry('export', true),
+                        ))
                 ),
                 allOf(
                         hasEntry('id', 'STUDY_ID_2'),
@@ -105,7 +109,11 @@ class StudiesResourceTests extends ResourceTestCase {
                                 hasEntry('fullName', '\\foo\\study2\\'),
                                 hasEntry('key', '\\\\i2b2 main\\foo\\study2\\'),
                             )
-                        ])
+                        ]),
+                        hasEntry(is('accessibleByUser'), allOf(
+                            hasEntry('view', true),
+                            hasEntry('export', true),
+                ))
                 ),
                 allOf(
                         hasEntry('id', 'STUDY_ID_3'),
@@ -115,7 +123,11 @@ class StudiesResourceTests extends ResourceTestCase {
                                 hasEntry('fullName', '\\foo\\study3\\'),
                                 hasEntry('key', '\\\\i2b2 main\\foo\\study3\\'),
                             )
-                        ])
+                        ]),
+                        hasEntry(is('accessibleByUser'), allOf(
+                            hasEntry('view', true),
+                            hasEntry('export', true),
+                ))
                 )
             )
         ])
@@ -133,9 +145,9 @@ class StudiesResourceTests extends ResourceTestCase {
                         hasEntry('fullName', '\\foo\\study1\\'),
                         hasEntry('key', '\\\\i2b2 main\\foo\\study1\\'),
                 )),
-                hasEntry(is('accessibility'), allOf(
-                        hasEntry('accessView', true),
-                        hasEntry('accessExport', true),
+                hasEntry(is('accessibleByUser'), allOf(
+                        hasEntry('view', true),
+                        hasEntry('export', true),
                 ))
         )
     }
@@ -155,7 +167,11 @@ class StudiesResourceTests extends ResourceTestCase {
                     hasEntry('fullName', '\\foo\\study1\\'),
                     hasEntry('key', '\\\\i2b2 main\\foo\\study1\\'),
                 )
-            ])
+            ]),
+             hasEntry(is('accessibleByUser'), allOf(
+                     hasEntry('view', true),
+                     hasEntry('export', true),
+                ))
         )
     }
     

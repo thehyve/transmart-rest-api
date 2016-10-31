@@ -40,9 +40,9 @@ class StudyAccessSerializationHelper extends AbstractHalOrJsonSerializationHelpe
     final String collectionName = 'studiesAccess'
 
     @Override
-    Collection<Link> getLinks(StudyAccessImpl StudyAccessImpl) {
+    Collection<Link> getLinks(StudyAccessImpl studyAccessImpl) {
         [new Link(RELATIONSHIP_SELF, '/studies/' +
-                StudyAccessImpl.study.id.toLowerCase(Locale.ENGLISH).encodeAsURL())]
+                studyAccessImpl.study.id.toLowerCase(Locale.ENGLISH).encodeAsURL())]
     }
 
     @Override
