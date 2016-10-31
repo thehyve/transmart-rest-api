@@ -80,7 +80,12 @@ class RestApiUrlMappings {
 
             "/observations"(method: 'GET', controller: 'observation', action: 'indexStandalone')
 
+            "/export"( controller: 'ExportController', action:'export')
+
             "/api-version"(method: 'GET', controller: 'apiVersion', action: 'index')
+
+            "/export/datatypes"(method: 'GET', controller: 'export', action:'datatypes')
+
         }
 
         "/api-version"(method: 'GET', controller: 'apiVersion', action: 'index')
