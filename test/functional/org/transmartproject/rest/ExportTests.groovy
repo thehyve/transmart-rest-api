@@ -1,7 +1,6 @@
 package org.transmartproject.rest
 
-import org.codehaus.groovy.grails.web.mime.MimeType
-
+import org.codehaus.groovy.grails.web.json.JSONArray
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
 
@@ -22,7 +21,7 @@ class ExportTests extends ResourceTestCase{
                         hasEntry('dataTypeCode', 'mrna'),
                         hasEntry(is('cohorts'), contains(allOf(
                                 hasEntry(is('concepts'), contains(allOf(
-                                        hasEntry('numOfPatients', 0),
+                                        hasEntry(is('subjects'), contains(-101)),
                                         hasEntry('conceptPath', "\\foo\\study1\\bar\\")
                                 )))
                         ))),
@@ -31,17 +30,16 @@ class ExportTests extends ResourceTestCase{
                         hasEntry('dataType', 'Clinical data'),
                         hasEntry('dataTypeCode', 'clinical'),
                         hasEntry(is('cohorts'), contains(allOf(
-                                hasEntry(is('concepts'), allOf(
-                                        contains(
+                                hasEntry(is('concepts'), contains(
                                                 allOf(
-                                                        hasEntry('numOfPatients', 0),
+                                                        hasEntry(is('subjects'), is(JSONArray.class)),
                                                         hasEntry('conceptPath', "\\foo\\study2\\long path\\")
                                                 ),
                                                 allOf(
-                                                        hasEntry('numOfPatients', 0),
+                                                        hasEntry(is('subjects'), containsInAnyOrder(-201, -202)),
                                                         hasEntry('conceptPath', "\\foo\\study2\\sex\\")
                                                 ))
-                                ))
+                                )
                         ))),
                 )
         )))

@@ -3,9 +3,9 @@ package org.transmartproject.rest
 import grails.validation.Validateable
 import groovy.json.JsonException
 import groovy.json.JsonSlurper
-import org.apache.commons.lang.NullArgumentException
 import org.springframework.beans.factory.annotation.Autowired
 import org.transmartproject.core.exceptions.InvalidArgumentsException
+import org.transmartproject.core.exceptions.NoSuchResourceException
 import org.transmartproject.db.RestExportService
 
 class ExportController {
@@ -29,29 +29,27 @@ class ExportController {
      *  Returns datatypes and patient number of given concepts.
      *
      */
-    def datatypes(){
-        def jsonSlurper = new JsonSlurper()
+    def datatypes() throws NoSuchResourceException {
         if (!(params.containsKey('concepts'))){
-            throw new NoSuchElementException(
-                    "No parameter named concepts."
-            )
+            throw new NoSuchResourceException("No parameter named concepts was given.")
         }
-        def test = params.get('concepts').decodeURL()
+        if (params.get('concepts') == "") {
+            throw new InvalidArgumentsException("Parameter concepts has no value.")
+        }
+        def jsonSlurper = new JsonSlurper()
+        def conceptParameters = params.get('concepts').decodeURL()
         try {
-            def concept_arguments = jsonSlurper.parseText(test)
-            if (concept_arguments==null){
-                throw new NullArgumentException(
-                        "Parameter concepts has no value."
-                )
-            }
-            List datatypes = []
-            concept_arguments.each { it ->
+            def conceptArguments = jsonSlurper.parseText(conceptParameters)
+            List dataTypes = []
+            int cohortNumber = 1
+            conceptArguments.each { it ->
                 List conceptKeysList = it.conceptKeys
-                datatypes += restExportService.getDataTypes(conceptKeysList)
+                dataTypes = restExportService.getDataTypes(conceptKeysList, dataTypes, cohortNumber)
+                cohortNumber += 1
             }
-            respond(restExportService.formatDataTypes(datatypes))
+            respond(dataTypes)
         } catch(JsonException e){
-            "Given value was non valid JSON."
+            throw new InvalidArgumentsException("Given parameter was non valid JSON.")
         }
 
     }
