@@ -30,28 +30,7 @@ class ExportController {
      *
      */
     def datatypes() throws NoSuchResourceException {
-        if (!(params.containsKey('concepts'))){
-            throw new NoSuchResourceException("No parameter named concepts was given.")
-        }
-        if (params.get('concepts') == "") {
-            throw new InvalidArgumentsException("Parameter concepts has no value.")
-        }
-        def jsonSlurper = new JsonSlurper()
-        def conceptParameters = params.get('concepts').decodeURL()
-        try {
-            def conceptArguments = jsonSlurper.parseText(conceptParameters)
-            List dataTypes = []
-            int cohortNumber = 1
-            conceptArguments.each { it ->
-                List conceptKeysList = it.conceptKeys
-                dataTypes = restExportService.getDataTypes(conceptKeysList, dataTypes, cohortNumber)
-                cohortNumber += 1
-            }
-            respond(dataTypes)
-        } catch(JsonException e){
-            throw new InvalidArgumentsException("Given parameter was non valid JSON.")
-        }
-
+        respond restExportService.retrieveDataTypes(params)
     }
 
     private void throwIfInvalid(command) {
