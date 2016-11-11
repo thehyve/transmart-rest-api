@@ -26,7 +26,7 @@ class ExportController {
     }
 
     /**GET request on /export/datatypes
-     *  Returns datatypes and patient number of given concepts.
+     *  Returns datatypes and list with subjects of given concepts.
      *
      */
     def datatypes() throws NoSuchResourceException {

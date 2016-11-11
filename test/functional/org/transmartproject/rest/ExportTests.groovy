@@ -9,8 +9,7 @@ class ExportTests extends ResourceTestCase{
     String version = "v1"
 
 
-    private static final String JSON_CONCEPTS_DATATYPES_URI = "%5B%7B%22conceptKeys%22%3A+%5B%22%5C%5C%5C%5Ci2b2+main%5C%5Cfoo%5C%5Cstudy1%5C%5Cbar%5C%5C%22%5D%7D%2C+%7B%22conceptKeys%22%3A+%5B%22%5C%5C%5C%5Ci2b2+main%5C%5Cfoo%5C%5Cstudy2%5C%5Clong+path%5C%5C%22%2C+%22%5C%5C%5C%5Ci2b2+main%5C%5Cfoo%5C%5Cstudy2%5C%5Csex%5C%5C%22%5D%7D%5D"
-
+    private static final String JSON_CONCEPTS_DATATYPES_URI = "%7B%22cohorts%22%3A%20%5B%7B%22conceptKeys%22%3A%20%5B%22%5C%5C%5C%5Ci2b2%20main%5C%5Cfoo%5C%5Cstudy1%5C%5Cbar%5C%5C%22%5D%7D%2C%20%7B%22conceptKeys%22%3A%20%5B%22%5C%5C%5C%5Ci2b2%20main%5C%5Cfoo%5C%5Cstudy2%5C%5Clong%20path%5C%5C%22%2C%20%22%5C%5C%5C%5Ci2b2%20main%5C%5Cfoo%5C%5Cstudy2%5C%5Csex%5C%5C%22%5D%7D%5D%7D"
     void testDataTypes() {
         get("${baseURL}$version/export/datatypes", { concepts=JSON_CONCEPTS_DATATYPES_URI })
         assertStatus 200
