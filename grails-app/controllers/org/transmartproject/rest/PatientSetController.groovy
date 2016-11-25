@@ -1,12 +1,16 @@
 package org.transmartproject.rest
 
+import grails.rest.Link
+import grails.rest.render.util.AbstractLinkingRenderer
 import org.codehaus.groovy.grails.web.mime.MimeType
 import org.springframework.beans.factory.annotation.Autowired
+import org.transmartproject.core.dataquery.Patient
 import org.transmartproject.core.exceptions.InvalidRequestException
 import org.transmartproject.core.querytool.QueriesResource
 import org.transmartproject.core.querytool.QueryDefinition
 import org.transmartproject.core.querytool.QueryDefinitionXmlConverter
 import org.transmartproject.core.querytool.QueryResult
+import org.transmartproject.rest.marshallers.ContainerResponseWrapper
 import org.transmartproject.rest.misc.CurrentUser
 
 import static org.transmartproject.core.users.ProtectedOperation.WellKnownOperations.BUILD_COHORT
@@ -34,7 +38,8 @@ class PatientSetController {
      * GET /patient_sets
      */
     def index() {
-        respond queriesResource.getQueryResultsSummaryByUsername(currentUser.getUsername() )
+        List result = queriesResource.getQueryResultsSummaryByUsername(currentUser.getUsername() )
+        respond wrapPatients(result)
     }
 
     /**
@@ -83,5 +88,14 @@ class PatientSetController {
     def delete(Long id) {
         respond queriesResource.runDisablingQuery(id, currentUser.username),
                 [status: 204]
+    }
+
+    private wrapPatients(Object source) {
+        new ContainerResponseWrapper
+            (
+                container: source,
+                componentType: Patient,
+                links: [ new Link(AbstractLinkingRenderer.RELATIONSHIP_SELF, "/patient_sets") ]
+            )
     }
 }
